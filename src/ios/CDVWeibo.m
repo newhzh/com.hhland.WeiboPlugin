@@ -10,7 +10,7 @@
 
 @implementation CDVWeibo
 
-static int const WEBIO_THUMB_SIZE=320;
+static int const WEBIO_THUMB_SIZE=160;
 
 NSString *WEBIO_APP_ID = @"weibo_app_id";
 NSString *WEBIO_REDIRECT_URI = @"redirecturi";
@@ -98,13 +98,17 @@ NSString *WEBIO_SUCCESS = @"0";
     //params[1] -- 标题
     //params[2] -- 描述
     //params[3] -- 图片url
+    NSData *thumbData=UIImageJPEGRepresentation([self getUIImageFromURL:params[3]],1.0);
+    
     WBMessageObject *message=[WBMessageObject message];
     WBWebpageObject *webObject = [WBWebpageObject object];
     webObject.objectID =[NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]];
     webObject.title=params[1];
     webObject.description=params[2];
-    webObject.thumbnailData=UIImageJPEGRepresentation([self getUIImageFromURL:params[3]],1.0);
+    webObject.thumbnailData=thumbData;
     webObject.webpageUrl=params[0];
+    
+    NSLog(@"缩略图size:%lu",(unsigned long)thumbData.length);
     
     [message setMediaObject:webObject];
     return message;
@@ -132,6 +136,8 @@ NSString *WEBIO_SUCCESS = @"0";
         
         return scaledImage;
     }
+    
+    
     
     return image;
 }
