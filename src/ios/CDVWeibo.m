@@ -10,22 +10,22 @@
 
 @implementation CDVWeibo
 
-static int const THUMB_SIZE=320;
+static int const WEBIO_THUMB_SIZE=320;
 
 NSString *WEBIO_APP_ID = @"weibo_app_id";
 NSString *WEBIO_REDIRECT_URI = @"redirecturi";
 NSString *WEBIO_DEFUALT_REDIRECT_URI = @"https://api.weibo.com/oauth2/default.html";
 
-NSString *ERR_CANCEL_BY_USER = @"cancel by user";
-NSString *ERR_SHARE_INSDK_FAIL = @"share in sdk failed";
-NSString *ERR_SEND_FAIL = @"send failed";
-NSString *ERR_UNSPPORTTED = @"Weibo unspport";
-NSString *ERR_AUTH_ERROR = @"Weibo auth error";
-NSString *ERR_UNKNOW_ERROR = @"Weibo unknow error";
-NSString *ERR_USER_CANCEL_INSTALL = @"user cancel install weibo";
-NSString *ERR_NOT_INSTALLED =@"Weibo not installed";
-NSString *ERR_INVALID_OPTIONS =@"Weibo invalid options";
-NSString *SUCCESS = @"0";
+NSString *WEBIO_ERR_CANCEL_BY_USER = @"cancel by user";
+NSString *WEBIO_ERR_SHARE_INSDK_FAIL = @"share in sdk failed";
+NSString *WEBIO_ERR_SEND_FAIL = @"send failed";
+NSString *WEBIO_ERR_UNSPPORTTED = @"Weibo unspport";
+NSString *WEBIO_ERR_AUTH_ERROR = @"Weibo auth error";
+NSString *WEBIO_ERR_UNKNOW_ERROR = @"Weibo unknow error";
+NSString *WEBIO_ERR_USER_CANCEL_INSTALL = @"user cancel install weibo";
+NSString *WEBIO_ERR_NOT_INSTALLED =@"Weibo not installed";
+NSString *WEBIO_ERR_INVALID_OPTIONS =@"Weibo invalid options";
+NSString *WEBIO_SUCCESS = @"0";
 
 - (void)pluginInitialize{
     NSString *appId = [[self.commandDelegate settings] objectForKey:WEBIO_APP_ID];
@@ -57,7 +57,7 @@ NSString *SUCCESS = @"0";
     
     //判断手机是否安装微博客户端
     if (![WeiboSDK isWeiboAppInstalled]) {
-        result=[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:ERR_NOT_INSTALLED];
+        result=[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_NOT_INSTALLED];
         [self.commandDelegate sendPluginResult:result callbackId:cmd.callbackId];
         return;
     }
@@ -65,7 +65,7 @@ NSString *SUCCESS = @"0";
     //判断参数是否合法
     NSArray *params=cmd.arguments;
     if (!params) {
-        result=[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:ERR_INVALID_OPTIONS];
+        result=[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_INVALID_OPTIONS];
         [self.commandDelegate sendPluginResult:result callbackId:cmd.callbackId];
         return;
     }
@@ -83,11 +83,11 @@ NSString *SUCCESS = @"0";
                          @"Other_Info_3": @{@"key1": @"obj1", @"key2": @"obj2"}};
     BOOL sendSuccess=[WeiboSDK sendRequest:req];
     if (!sendSuccess) {
-        result=[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:ERR_SEND_FAIL];
+        result=[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_SEND_FAIL];
         [self.commandDelegate sendPluginResult:result callbackId:cmd.callbackId];
         self.currentCallbackId = nil;
     }else{
-        result=[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:SUCCESS];
+        result=[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:WEBIO_SUCCESS];
         [self.commandDelegate sendPluginResult:result callbackId:cmd.callbackId];
     }
 }
@@ -113,14 +113,14 @@ NSString *SUCCESS = @"0";
     NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
     UIImage *image = [UIImage imageWithData:data];
     
-    if (image.size.width > THUMB_SIZE || image.size.height > THUMB_SIZE){
+    if (image.size.width > WEBIO_THUMB_SIZE || image.size.height > WEBIO_THUMB_SIZE){
         CGFloat width = 0;
         CGFloat height = 0;
         if (image.size.width > image.size.height){
-            width = THUMB_SIZE;
+            width = WEBIO_THUMB_SIZE;
             height = width * image.size.height / image.size.width;
         }else{
-            height = THUMB_SIZE;
+            height = WEBIO_THUMB_SIZE;
             width = height * image.size.width / image.size.height;
         }
         //裁剪
@@ -155,22 +155,22 @@ NSString *SUCCESS = @"0";
                 result=[CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
                 break;
             case WeiboSDKResponseStatusCodeUserCancel:
-                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:ERR_CANCEL_BY_USER];
+                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_CANCEL_BY_USER];
                 break;
             case WeiboSDKResponseStatusCodeSentFail:
-                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:ERR_SEND_FAIL];
+                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_SEND_FAIL];
                 break;
             case WeiboSDKResponseStatusCodeAuthDeny:
-                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:ERR_AUTH_ERROR];
+                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_AUTH_ERROR];
                 break;
             case WeiboSDKResponseStatusCodeUnsupport:
-                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:ERR_UNSPPORTTED];
+                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_UNSPPORTTED];
                 break;
             case WeiboSDKResponseStatusCodeShareInSDKFailed:
-                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:ERR_SHARE_INSDK_FAIL];
+                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_SHARE_INSDK_FAIL];
                 break;
             default:
-                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:ERR_UNKNOW_ERROR];
+                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_UNKNOW_ERROR];
                 break;
         }
     }
