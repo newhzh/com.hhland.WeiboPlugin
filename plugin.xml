@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="com.hhland.cordova.weibo"
+        version="1.0.0">
+    <name>WeiboPlugin</name>
+    <description>hhland Cordova Weibo Plugin</description>
+    <keywords>cordova,weibo,plugin</keywords>
+    <author>newhzh</author>
+
+    <preference name="WEIBO_APP_ID" />
+
+    <js-module src="www/WeiboPlugin.js" name="WeiboPlugin">
+        <clobbers target="WeiboPlugin" />
+    </js-module>
+
+    <!-- android
+    <platform name="android">
+        <config-file target="config.xml" parent="/*">
+            <feature name="WechatPlugin">
+                <param name="android-package" value="com.hhland.cordova.wx.ShareWechatPlugin"/>
+            </feature>
+            <preference name="WECHATAPPID" value="$WECHATAPPID"/>
+        </config-file>
+
+        <source-file src="src/android/ShareWechatPlugin.java" target-dir="src/com/hhland/cordova/wx" />
+        <source-file src="src/android/WXEntryActivity.java" target-dir="src/com/hhland/cordova/wx" />
+        <source-file src="src/android/Util.java" target-dir="src/com/hhland/cordova/wx" />
+        <source-file src="src/android/libammsdk.jar" target-dir="libs" />
+    </platform> -->
+
+    <!-- ios -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="WeiboPlugin">
+                <param name="ios-package" value="CDVWeibo"/>
+            </feature>
+            <access origin="https://open.weibo.cn/*" />
+            <access origin="https://*.sina.cn/*" />
+            <access origin="https://login.sina.com.cn/*" />
+            <access origin="https://passport.weibo.cn/*"/>
+            <access origin="http://service.weibo.com/share/*"/>
+            <access origin="http://*.sinajs.cn/*"/>
+            <access origin="http://*.sina.com.cn/*"/>
+            <access origin="https://api.weibo.com/*"/>
+            <preference name="WEIBO_APP_ID" value="$WEIBO_APP_ID"/>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
+            <array>
+                <string>sinaweibohd</string>
+                <string>sinaweibo</string>
+                <string>weibosdk</string>
+                <string>weibosdk2.5</string>
+            </array>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="NSAppTransportSecurity">
+            <dict>
+                <key>NSAllowsArbitraryLoads</key>
+                <true/>
+            </dict>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+            <array>
+                <dict>
+                    <key>CFBundleTypeRole</key>
+                    <string>Editor</string>
+                    <key>CFBundleURLName</key>
+                    <string>$PACKAGE_NAME</string>
+                    <key>CFBundleURLSchemes</key>
+                    <array>
+                        <string>wb$WEIBO_APP_ID</string>
+                    </array>
+                </dict>
+            </array>
+        </config-file>
+
+        <!-- Plugin source code -->
+        <header-file src="src/ios/CDVWeibo.h" />
+        <source-file src="src/ios/CDVWeibo.m" />
+
+        <!-- Weibo Official -->
+        <header-file src="src/ios/libWeiboSDK/WBHttpRequest.h" />
+        <header-file src="src/ios/libWeiboSDK/WBHttpRequest+WeiboShare.h" />
+        <header-file src="src/ios/libWeiboSDK/WBHttpRequest+WeiboToken.h" />
+        <header-file src="src/ios/libWeiboSDK/WBHttpRequest+WeiboUser.h" />
+        <header-file src="src/ios/libWeiboSDK/WBHttpRequest+WeiboGame.h" />
+        <header-file src="src/ios/libWeiboSDK/WBSDKBasicButton.h" />
+        <header-file src="src/ios/libWeiboSDK/WBSDKCommentButton.h" />
+        <header-file src="src/ios/libWeiboSDK/WBSDKRelationshipButton.h" />
+        <header-file src="src/ios/libWeiboSDK/WeiboSDK.h" />
+        <header-file src="src/ios/libWeiboSDK/WeiboUser.h" />
+        <source-file src="src/ios/libWeiboSDK/libWeiboSDK.a" framework="true"  compiler-flags="-objc"/>
+        <resource-file src="src/ios/libWeiboSDK/WeiboSDK.bundle" />
+
+        <!-- Other required frameworks -->
+        <framework src="QuartzCore.framework" />
+        <framework src="ImageIO.framework" />
+        <framework src="SystemConfiguration.framework" />
+        <framework src="Security.framework" />
+        <framework src="CoreTelephony.framework" />
+        <framework src="CoreText.framework" />
+        <framework src="Foundation.framework" />
+        <framework src="CoreGraphics.framework" />
+        <framework src="libz.dylib" />
+        <framework src="libsqlite3.dylib" />
+    </platform>
+
+</plugin>
