@@ -98,7 +98,7 @@ NSString *WEBIO_SUCCESS = @"0";
     NSData *imgData =[NSData dataWithContentsOfURL:[NSURL URLWithString:params[3]]];
     
     WBMessageObject *message=[WBMessageObject message];
-    message.text=[NSString stringWithFormat:@"%@,%@",params[1],params[0]];
+    message.text=[NSString stringWithFormat:@"%@%@",params[1],params[0]];
     
     WBImageObject *imgObject=[WBImageObject object];
     imgObject.imageData =imgData;
