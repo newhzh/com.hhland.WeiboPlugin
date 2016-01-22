@@ -73,9 +73,9 @@ NSString *WEBIO_SUCCESS = @"0";
     
     self.currentCallbackId=cmd.callbackId;
     
-    WBAuthorizeRequest *authRequest = [WBAuthorizeRequest request];
-    authRequest.redirectURI = self.redirectURI;
-    authRequest.scope = @"all";
+//    WBAuthorizeRequest *authRequest = [WBAuthorizeRequest request];
+//    authRequest.redirectURI = self.redirectURI;
+//    authRequest.scope = @"all";
     
     WBSendMessageToWeiboRequest *req=[WBSendMessageToWeiboRequest requestWithMessage:[self getShareMessage:params]];
     req.userInfo = @{@"ShareMessageFrom": @"WeiboPlugin",
@@ -98,23 +98,31 @@ NSString *WEBIO_SUCCESS = @"0";
     //params[1] -- 标题
     //params[2] -- 描述
     //params[3] -- 图片url
-    NSData *thumbData=UIImageJPEGRepresentation([self getUIImageFromURL:params[3]],1.0);
+    NSData *thumbData=UIImageJPEGRepresentation([self getImageFromURL:params[3]],1.0);
+    NSData *imgData =[NSData dataWithContentsOfURL:[NSURL URLWithString:params[3]]];
     
     WBMessageObject *message=[WBMessageObject message];
+    message.text=params[1];
+    
+    WBImageObject *imgObject=[WBImageObject object];
+    imgObject.imageData =imgData;
+    
     WBWebpageObject *webObject = [WBWebpageObject object];
     webObject.objectID =[NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]];
     webObject.title=params[1];
     webObject.description=params[2];
     webObject.thumbnailData=thumbData;
     webObject.webpageUrl=params[0];
-    
-    //NSLog(@"缩略图size:%lu",(unsigned long)thumbData.length);
-    
     [message setMediaObject:webObject];
+    
+    NSLog(@"缩略图size:%lu",(unsigned long)thumbData.length);
+    NSLog(@"大图size:%lu",(unsigned long)imgData.length);
+    
+    
     return message;
 }
 
-- (UIImage *)getUIImageFromURL:(NSString *)url{
+- (UIImage *)getImageFromURL:(NSString *)url{
     NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
     UIImage *image = [UIImage imageWithData:data];
     
@@ -156,15 +164,15 @@ NSString *WEBIO_SUCCESS = @"0";
     CDVPluginResult *result=nil;
     if ([response isKindOfClass:[WBSendMessageToWeiboResponse class]]) {
         if (response.statusCode==WeiboSDKResponseStatusCodeSuccess) {
-            WBSendMessageToWeiboResponse *sendResponse =(WBSendMessageToWeiboResponse *) response;
-            NSString *accessToken = [sendResponse.authResponse accessToken];
-            NSString *userID = [sendResponse.authResponse userID];
-            if (accessToken && userID) {
-                NSUserDefaults *saveDefaults = [NSUserDefaults standardUserDefaults];
-                [saveDefaults setValue:accessToken forKey:@"access_token"];
-                [saveDefaults setValue:userID forKey:@"userid"];
-                [saveDefaults synchronize];
-            }
+//            WBSendMessageToWeiboResponse *sendResponse =(WBSendMessageToWeiboResponse *) response;
+//            NSString *accessToken = [sendResponse.authResponse accessToken];
+//            NSString *userID = [sendResponse.authResponse userID];
+//            if (accessToken && userID) {
+//                NSUserDefaults *saveDefaults = [NSUserDefaults standardUserDefaults];
+//                [saveDefaults setValue:accessToken forKey:@"access_token"];
+//                [saveDefaults setValue:userID forKey:@"userid"];
+//                [saveDefaults synchronize];
+//            }
             result=[CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
         }else if (response.statusCode==WeiboSDKResponseStatusCodeUserCancel){
             result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_CANCEL_BY_USER];
