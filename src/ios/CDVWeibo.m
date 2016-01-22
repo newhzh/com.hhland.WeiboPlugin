@@ -73,9 +73,9 @@ NSString *WEBIO_SUCCESS = @"0";
     
     self.currentCallbackId=cmd.callbackId;
     
-//    WBAuthorizeRequest *authRequest = [WBAuthorizeRequest request];
-//    authRequest.redirectURI = self.redirectURI;
-//    authRequest.scope = @"all";
+    WBAuthorizeRequest *authRequest = [WBAuthorizeRequest request];
+    authRequest.redirectURI = self.redirectURI;
+    authRequest.scope = @"all";
     
     WBSendMessageToWeiboRequest *req=[WBSendMessageToWeiboRequest requestWithMessage:[self getShareMessage:params]];
     req.userInfo = @{@"ShareMessageFrom": @"WeiboPlugin",
@@ -108,7 +108,7 @@ NSString *WEBIO_SUCCESS = @"0";
     webObject.thumbnailData=thumbData;
     webObject.webpageUrl=params[0];
     
-    NSLog(@"缩略图size:%lu",(unsigned long)thumbData.length);
+    //NSLog(@"缩略图size:%lu",(unsigned long)thumbData.length);
     
     [message setMediaObject:webObject];
     return message;
@@ -137,8 +137,6 @@ NSString *WEBIO_SUCCESS = @"0";
         return scaledImage;
     }
     
-    
-    
     return image;
 }
 
@@ -157,34 +155,71 @@ NSString *WEBIO_SUCCESS = @"0";
     
     CDVPluginResult *result=nil;
     if ([response isKindOfClass:[WBSendMessageToWeiboResponse class]]) {
-        switch (response.statusCode) {
-            case WeiboSDKResponseStatusCodeSuccess:
-                result=[CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-                break;
-            case WeiboSDKResponseStatusCodeUserCancel:
-                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_CANCEL_BY_USER];
-                break;
-            case WeiboSDKResponseStatusCodeSentFail:
-                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_SEND_FAIL];
-                break;
-            case WeiboSDKResponseStatusCodeAuthDeny:
-                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_AUTH_ERROR];
-                break;
-            case WeiboSDKResponseStatusCodeUnsupport:
-                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_UNSPPORTTED];
-                break;
-            case WeiboSDKResponseStatusCodeShareInSDKFailed:
-                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_SHARE_INSDK_FAIL];
-                break;
-            default:
-                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_UNKNOW_ERROR];
-                break;
+        if (response.statusCode==WeiboSDKResponseStatusCodeSuccess) {
+            WBSendMessageToWeiboResponse *sendResponse =(WBSendMessageToWeiboResponse *) response;
+            NSString *accessToken = [sendResponse.authResponse accessToken];
+            NSString *userID = [sendResponse.authResponse userID];
+            if (accessToken && userID) {
+                NSUserDefaults *saveDefaults = [NSUserDefaults standardUserDefaults];
+                [saveDefaults setValue:accessToken forKey:@"access_token"];
+                [saveDefaults setValue:userID forKey:@"userid"];
+                [saveDefaults synchronize];
+            }
+            result=[CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        }else if (response.statusCode==WeiboSDKResponseStatusCodeUserCancel){
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_CANCEL_BY_USER];
+        }else if (response.statusCode==WeiboSDKResponseStatusCodeSentFail){
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_SEND_FAIL];
+        }else if (response.statusCode==WeiboSDKResponseStatusCodeAuthDeny){
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_AUTH_ERROR];
+        }else if (response.statusCode==WeiboSDKResponseStatusCodeUnsupport){
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_UNSPPORTTED];
+        }else if (response.statusCode==WeiboSDKResponseStatusCodeShareInSDKFailed){
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_SHARE_INSDK_FAIL];
+        }else{
+            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_UNKNOW_ERROR];
+        }
+        
+//        switch (response.statusCode) {
+//            case WeiboSDKResponseStatusCodeSuccess:
+//                result=[CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+//                break;
+//            case WeiboSDKResponseStatusCodeUserCancel:
+//                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_CANCEL_BY_USER];
+//                break;
+//            case WeiboSDKResponseStatusCodeSentFail:
+//                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_SEND_FAIL];
+//                break;
+//            case WeiboSDKResponseStatusCodeAuthDeny:
+//                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_AUTH_ERROR];
+//                break;
+//            case WeiboSDKResponseStatusCodeUnsupport:
+//                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_UNSPPORTTED];
+//                break;
+//            case WeiboSDKResponseStatusCodeShareInSDKFailed:
+//                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_SHARE_INSDK_FAIL];
+//                break;
+//            default:
+//                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_UNKNOW_ERROR];
+//                break;
+//        }
+    }else if ([response isKindOfClass:WBAuthorizeResponse.class]) {
+        if (response.statusCode==WeiboSDKResponseStatusCodeSuccess) {
+            NSString *userid=[(WBAuthorizeResponse *) response userID];
+            NSString *accessToken=[(WBAuthorizeResponse *) response accessToken];
+            NSUserDefaults *saveDefaults = [NSUserDefaults standardUserDefaults];
+            [saveDefaults setValue:userid forKey:@"userid"];
+            [saveDefaults setValue:accessToken forKey:@"access_token"];
+            [saveDefaults synchronize];
+            result=[CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            NSLog(@"weibo access token:%@",accessToken);
+        }else{
+            result=[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:WEBIO_ERR_UNKNOW_ERROR];
         }
     }
     
     [self.commandDelegate sendPluginResult:result callbackId:self.currentCallbackId];
     self.currentCallbackId=nil;
-    
 }
 
 
