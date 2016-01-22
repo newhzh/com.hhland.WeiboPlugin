@@ -23,7 +23,7 @@ NSString *WEBIO_ERR_UNSPPORTTED = @"Weibo unspport";
 NSString *WEBIO_ERR_AUTH_ERROR = @"Weibo auth error";
 NSString *WEBIO_ERR_UNKNOW_ERROR = @"Weibo unknow error";
 NSString *WEBIO_ERR_USER_CANCEL_INSTALL = @"user cancel install weibo";
-NSString *WEBIO_ERR_NOT_INSTALLED =@"Weibo not installed";
+NSString *WEBIO_ERR_NOT_INSTALLED =@"1";
 NSString *WEBIO_ERR_INVALID_OPTIONS =@"Weibo invalid options";
 NSString *WEBIO_SUCCESS = @"0";
 
