@@ -102,19 +102,19 @@ NSString *WEBIO_SUCCESS = @"0";
     NSData *imgData =[NSData dataWithContentsOfURL:[NSURL URLWithString:params[3]]];
     
     WBMessageObject *message=[WBMessageObject message];
-    message.text=params[1];
+    message.text=[NSString stringWithFormat:@"%@,%@",params[1],params[0]];
     
     WBImageObject *imgObject=[WBImageObject object];
     imgObject.imageData =imgData;
     message.imageObject=imgObject;
     
-    WBWebpageObject *webObject = [WBWebpageObject object];
-    webObject.objectID =[NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]];
-    webObject.title=params[1];
-    webObject.description=params[2];
-    webObject.thumbnailData=thumbData;
-    webObject.webpageUrl=params[0];
-    [message setMediaObject:webObject];
+//    WBWebpageObject *webObject = [WBWebpageObject object];
+//    webObject.objectID =[NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]];
+//    webObject.title=params[1];
+//    webObject.description=params[2];
+//    webObject.thumbnailData=thumbData;
+//    webObject.webpageUrl=params[0];
+//    [message setMediaObject:webObject];
     
     NSLog(@"缩略图size:%lu",(unsigned long)thumbData.length);
     NSLog(@"大图size:%lu",(unsigned long)imgData.length);
