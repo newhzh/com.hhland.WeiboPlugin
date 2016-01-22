@@ -106,6 +106,7 @@ NSString *WEBIO_SUCCESS = @"0";
     
     WBImageObject *imgObject=[WBImageObject object];
     imgObject.imageData =imgData;
+    message.imageObject=imgObject;
     
     WBWebpageObject *webObject = [WBWebpageObject object];
     webObject.objectID =[NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]];
