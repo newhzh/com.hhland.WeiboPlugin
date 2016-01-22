@@ -36,7 +36,7 @@ NSString *WEBIO_SUCCESS = @"0";
         self.redirectURI=uri;
     }
     BOOL regSuccess = [WeiboSDK registerApp:appId];
-    [WeiboSDK enableDebugMode:TRUE];
+    //[WeiboSDK enableDebugMode:TRUE];
     
     NSLog(@"weibo_appid:%@",appId);
     NSLog(@"weibo_reg result:%@",regSuccess?@"微博注册成功":@"微博注册失败");
