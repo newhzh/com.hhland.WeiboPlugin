@@ -35,14 +35,6 @@
             <feature name="WeiboPlugin">
                 <param name="ios-package" value="CDVWeibo"/>
             </feature>
-            <access origin="https://open.weibo.cn/*" />
-            <access origin="https://*.sina.cn/*" />
-            <access origin="https://login.sina.com.cn/*" />
-            <access origin="https://passport.weibo.cn/*"/>
-            <access origin="http://service.weibo.com/share/*"/>
-            <access origin="http://*.sinajs.cn/*"/>
-            <access origin="http://*.sina.com.cn/*"/>
-            <access origin="https://api.weibo.com/*"/>
             <preference name="WEIBO_APP_ID" value="$WEIBO_APP_ID"/>
         </config-file>
 
