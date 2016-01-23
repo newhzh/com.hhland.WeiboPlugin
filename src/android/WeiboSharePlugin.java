@@ -91,6 +91,51 @@ public class WeiboSharePlugin extends CordovaPlugin{
         return false;
     }
     
+    private TextObject getShareTextObject(String webUrl,String title,String description,String imgUrl){
+    	TextObject obj = new TextObject();
+		obj.identify = Utility.generateGUID();
+		obj.text=title+webUrl;
+		obj.description=description;
+		obj.actionUrl=webUrl;
+		try{
+			InputStream sm = new URL(imgUrl).openStream();
+			byte[] dataImage=getImageBytes(sm);
+			obj.thumbData = dataImage;
+		}catch(Exception e){
+			return null;
+		}
+		return obj;
+    }
+    
+    private ImageObject getShareImageObject(String webUrl,String title,String description,String imgUrl){
+    	ImageObject obj = new ImageObject();
+    	obj.title=title+webUrl;
+    	obj.description=description;
+		obj.actionUrl=webUrl;
+    	try{
+    		Bitmap bmp = BitmapFactory.decodeStream(new URL(imgUrl).openStream());
+    		obj.setImageObject(bmp);
+    	}catch(Exception e){
+			return null;
+		}
+    	return obj;
+    }
+    
+    private WebpageObject getShareWebpageObj(String webUrl,String title,String description,String imgUrl) {
+        WebpageObject obj = new WebpageObject();
+        obj.identify = Utility.generateGUID();
+        obj.title = title+webUrl;
+        obj.description = description;
+        obj.actionUrl=webUrl;
+        try{
+    		Bitmap bmp = BitmapFactory.decodeStream(new URL(imgUrl).openStream());
+    		obj.setThumbImage(bmp);
+    	}catch(Exception e){
+			return null;
+		}
+        return obj;
+    }
+    
     private void share(JSONArray params, CallbackContext callbackContext) throws JSONException{
     	//参数：
     	//params[0] -- 分享内容的目标 url
@@ -110,22 +155,8 @@ public class WeiboSharePlugin extends CordovaPlugin{
 		String description=params.getString(2);
 		String imgUrl=params.getString(3);
 		
-		TextObject obj = new TextObject();
-		obj.identify = Utility.generateGUID();
-		obj.text=title+webUrl;
-		
-		try{
-			//Bitmap bmp = BitmapFactory.decodeStream(new URL(imgUrl).openStream());
-			//obj.setThumbImage(bmp);
-			InputStream sm = new URL(imgUrl).openStream();
-			byte[] dataImage=getImageBytes(sm);
-			obj.thumbData = dataImage;
-		}catch(Exception e){
-			callbackContext.error(WEBIO_ERR_GET_IMAGE_FAIL);
-			return;
-		}
-		obj.description=description;
-		obj.actionUrl=webUrl;
+		//TextObject obj = getShareTextObject(webUrl,title,description,imgUrl);	
+		ImageObject obj = getShareImageObject(webUrl,title,description,imgUrl);	
 		
 		WeiboMessage msg = new WeiboMessage();
 		msg.mediaObject=obj;
