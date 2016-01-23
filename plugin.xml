@@ -23,6 +23,26 @@
             <preference name="WEIBO_APP_ID" value="$WEIBO_APP_ID"/>
         </config-file>
 
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <!--android mianfest for weibo web authorization -->
+            <activity android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
+                      android:configChanges="keyboardHidden|orientation"
+                      android:windowSoftInputMode="adjustResize"
+                      android:exported="false"
+                      android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            </activity>
+            <!--android mianfest for weibo share callback -->
+            <activity
+                    android:name="org.zy.yuancheng.weibo.WBShareResponseActivity"
+                    android:configChanges="keyboardHidden|orientation"
+                    android:screenOrientation="portrait" >
+                <intent-filter>
+                    <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                    <category android:name="android.intent.category.DEFAULT" />
+                </intent-filter>
+            </activity>
+        </config-file>
+
         <source-file src="src/android/WeiboSharePlugin.java" target-dir="src/com/hhland/cordova/weibo" />
         <source-file src="src/android/WBShareResponseActivity.java" target-dir="src/com/hhland/cordova/weibo" />
         <source-file src="src/android/libs/arm64-v8a/libweibosdkcore.so" target-dir="libs/arme64-v8a/" />
