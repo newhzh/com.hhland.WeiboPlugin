@@ -5,6 +5,10 @@ var exec = require('cordova/exec');
 
 var WeiboPlugin=function(){};
 
+WeiboPlugin.prototype.getAppKey=function(onSuccess,onError){
+    exec(onSuccess,onError,'WeiboPlugin','getAppKey',[]);
+};
+
 WeiboPlugin.prototype.wbShare=function(onSuccess,onError,params){
     exec(onSuccess,onError,'WeiboPlugin','share',params);
 };

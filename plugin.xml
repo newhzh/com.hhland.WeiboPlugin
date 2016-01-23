@@ -14,20 +14,26 @@
         <clobbers target="WeiboPlugin" />
     </js-module>
 
-    <!-- android
+    <!-- android -->
     <platform name="android">
         <config-file target="config.xml" parent="/*">
-            <feature name="WechatPlugin">
-                <param name="android-package" value="com.hhland.cordova.wx.ShareWechatPlugin"/>
+            <feature name="WeiboPlugin">
+                <param name="android-package" value="com.hhland.cordova.weibo.WeiboSharePlugin"/>
             </feature>
-            <preference name="WECHATAPPID" value="$WECHATAPPID"/>
+            <preference name="WEIBO_APP_ID" value="$WEIBO_APP_ID"/>
         </config-file>
 
-        <source-file src="src/android/ShareWechatPlugin.java" target-dir="src/com/hhland/cordova/wx" />
-        <source-file src="src/android/WXEntryActivity.java" target-dir="src/com/hhland/cordova/wx" />
-        <source-file src="src/android/Util.java" target-dir="src/com/hhland/cordova/wx" />
-        <source-file src="src/android/libammsdk.jar" target-dir="libs" />
-    </platform> -->
+        <source-file src="src/android/WeiboSharePlugin.java" target-dir="src/com/hhland/cordova/weibo" />
+        <source-file src="src/android/WBShareResponseActivity.java" target-dir="src/com/hhland/cordova/weibo" />
+        <source-file src="src/android/libs/arm64-v8a/libweibosdkcore.so" target-dir="libs/arme64-v8a/" />
+        <source-file src="src/android/libs/armeabi/libweibosdkcore.so" target-dir="libs/armeabi/" />
+        <source-file src="src/android/libs/armeabi-v7a/libweibosdkcore.so" target-dir="libs/armeabi-v7a/" />
+        <source-file src="src/android/libs/mips/libweibosdkcore.so" target-dir="libs/mips/" />
+        <source-file src="src/android/libs/mips64/libweibosdkcore.so" target-dir="libs/mips64/" />
+        <source-file src="src/android/libs/x86/libweibosdkcore.so" target-dir="libs/x86/" />
+        <source-file src="src/android/libs/x86_64/libweibosdkcore.so" target-dir="libs/x86_64/" />
+        <source-file src="src/android/weiboSDKCore_3.1.2.jar" target-dir="libs" />
+    </platform>
 
     <!-- ios -->
     <platform name="ios">
