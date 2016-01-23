@@ -20,11 +20,6 @@
             <feature name="WeiboPlugin">
                 <param name="android-package" value="com.hhland.cordova.weibo.WeiboSharePlugin"/>
             </feature>
-            <access origin="https://open.weibo.cn/*" />
-            <access origin="https://login.sina.com.cn/*" />
-            <access origin="https://passport.weibo.cn/*"/>
-            <access origin="http://*.sinaimg.cn/*"/>
-            <access origin="https://api.weibo.com/*"/>
             <preference name="WEIBO_APP_ID" value="$WEIBO_APP_ID"/>
         </config-file>
 
@@ -36,22 +31,6 @@
                       android:exported="false"
                       android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             </activity>
-            <!--android mianfest for weibo mobile Register -->
-            <activity android:name="com.sina.weibo.sdk.register.mobile.MobileRegisterActivity"
-                      android:configChanges="keyboardHidden|orientation"
-                      android:screenOrientation="portrait"
-                      android:windowSoftInputMode="adjustResize"
-                      android:exported="false" >
-            </activity>
-            <!--android mianfest for weibo select Country -->
-            <activity android:name="com.sina.weibo.sdk.register.mobile.SelectCountryActivity"
-                      android:configChanges="keyboardHidden|orientation"
-                      android:windowSoftInputMode="adjustResize"
-                      android:exported="false" >
-            </activity>
-            <!--android mianfest for weibo downloadService-->
-            <service android:name="com.sina.weibo.sdk.net.DownloadService"
-                     android:exported="false"></service>
             <!--android mianfest for weibo share callback -->
             <activity
                     android:name="com.hhland.cordova.weibo.WBShareResponseActivity"
