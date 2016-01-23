@@ -155,15 +155,17 @@ public class WeiboSharePlugin extends CordovaPlugin{
 		String description=params.getString(2);
 		String imgUrl=params.getString(3);
 		
-		//TextObject obj = getShareTextObject(webUrl,title,description,imgUrl);	
-		ImageObject obj = getShareImageObject(webUrl,title,description,imgUrl);	
+		TextObject objText = getShareTextObject(webUrl,title,description,imgUrl);	
+		ImageObject objImage = getShareImageObject(webUrl,title,description,imgUrl);	
 		
-		WeiboMessage msg = new WeiboMessage();
-		msg.mediaObject=obj;
+		//WeiboMessage msg = new WeiboMessage();
+		WeiboMultiMessage msg = new WeiboMultiMessage();
+		msg.textObject=objText;
+		msg.mediaObject=objImage;
 		
-		SendMessageToWeiboRequest req = new SendMessageToWeiboRequest();
+		SendMultiMessageToWeiboRequest req = new SendMultiMessageToWeiboRequest();
 		req.transaction=String.valueOf(System.currentTimeMillis());
-		req.message=msg;
+		req.multiMessage=msg;
 		
 		try {
             boolean success = api.sendRequest(this.cordova.getActivity(),req);
