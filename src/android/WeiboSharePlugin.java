@@ -1,6 +1,8 @@
 package com.hhland.cordova.weibo;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -111,9 +113,13 @@ public class WeiboSharePlugin extends CordovaPlugin{
 		TextObject obj = new TextObject();
 		obj.identify = Utility.generateGUID();
 		obj.text=title+webUrl;
+		
 		try{
-			Bitmap bmp = BitmapFactory.decodeStream(new URL(imgUrl).openStream());
-			obj.setThumbImage(bmp);
+			//Bitmap bmp = BitmapFactory.decodeStream(new URL(imgUrl).openStream());
+			//obj.setThumbImage(bmp);
+			InputStream sm = new URL(imgUrl).openStream();
+			byte[] dataImage=getImageBytes(sm);
+			obj.thumbData = dataImage;
 		}catch(Exception e){
 			callbackContext.error(WEBIO_ERR_GET_IMAGE_FAIL);
 			return;
@@ -151,6 +157,17 @@ public class WeiboSharePlugin extends CordovaPlugin{
 			 callbackContext.success(WEBIO_SUCCESS);
 		 }
 		 currentWBCallbackContext = callbackContext;
+    }
+    
+    private byte[] getImageBytes(InputStream sm) throws IOException{
+    	ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    	int nRead;
+    	byte[] data = new byte[16384];
+    	while ((nRead = sm.read(data, 0, data.length)) != -1) {
+    	  buffer.write(data, 0, nRead);
+    	}
+    	buffer.flush();
+    	return buffer.toByteArray();
     }
     
 }
